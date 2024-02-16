@@ -31,8 +31,9 @@ catkin_package(
 # set_property(TARGET invz_player PROPERTY CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(DCMAKE_BUILD_TYPE Release)
 
-add_definitions( -march=native )
+# add_definitions( -march=native )
 
 
 add_subdirectory(src/lib)
