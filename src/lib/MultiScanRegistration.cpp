@@ -151,7 +151,7 @@ void MultiScanRegistration::handleCloudMessage(const sensor_msgs::PointCloud2Con
   }
 
   // fetch new input cloud
-  pcl::PointCloud<pcl::PointXYZ> laserCloudIn;
+  pcl::PointCloud<pcl::PointXYZRGB> laserCloudIn;
   pcl::fromROSMsg(*laserCloudMsg, laserCloudIn);
 
   process(laserCloudIn, fromROSTime(laserCloudMsg->header.stamp));
