@@ -25,7 +25,7 @@ RegistrationParams::RegistrationParams(const float& scanPeriod_,
       surfaceCurvatureThreshold(surfaceCurvatureThreshold_)
 {};
 
-void BasicScanRegistration::processScanlines(const Time& scanTime, std::vector<pcl::PointCloud<pcl::PointXYZI>> const& laserCloudScans)
+void BasicScanRegistration::processScanlines(const Time& scanTime, std::vector<pcl::PointCloud<PointXYZRGBI>> const& laserCloudScans)
 {
   // reset internal buffers and set IMU start state based on current scan time
   reset(scanTime);  
@@ -98,7 +98,7 @@ void BasicScanRegistration::updateIMUData(Vector3& acc, IMUState& newState)
 }
 
 
-void BasicScanRegistration::projectPointToStartOfSweep(pcl::PointXYZI& point, float relTime)
+void BasicScanRegistration::projectPointToStartOfSweep(PointXYZRGBI& point, float relTime)
 {
   // project point to the start of the sweep using corresponding IMU data
   if (hasIMUData())
@@ -119,7 +119,7 @@ void BasicScanRegistration::setIMUTransformFor(const float& relTime)
 
 
 
-void BasicScanRegistration::transformToStartIMU(pcl::PointXYZI& point)
+void BasicScanRegistration::transformToStartIMU(PointXYZRGBI& point)
 {
   // rotate point to global IMU system
   rotateZXY(point, _imuCur.roll, _imuCur.pitch, _imuCur.yaw);
@@ -157,7 +157,7 @@ void BasicScanRegistration::extractFeatures(const uint16_t& beginIdx)
   // extract features from individual scans
   size_t nScans = _scanIndices.size();
   for (size_t i = beginIdx; i < nScans; i++) {
-    pcl::PointCloud<pcl::PointXYZI>::Ptr surfPointsLessFlatScan(new pcl::PointCloud<pcl::PointXYZI>);
+    pcl::PointCloud<PointXYZRGBI>::Ptr surfPointsLessFlatScan(new pcl::PointCloud<PointXYZRGBI>);
     size_t scanStartIdx = _scanIndices[i].first;
     size_t scanEndIdx = _scanIndices[i].second;
 
@@ -243,11 +243,12 @@ void BasicScanRegistration::extractFeatures(const uint16_t& beginIdx)
     }
 
     // down size less flat surface point cloud of current scan
-    pcl::PointCloud<pcl::PointXYZI> surfPointsLessFlatScanDS;
-    pcl::VoxelGrid<pcl::PointXYZI> downSizeFilter;
-    downSizeFilter.setInputCloud(surfPointsLessFlatScan);
-    downSizeFilter.setLeafSize(_config.lessFlatFilterSize, _config.lessFlatFilterSize, _config.lessFlatFilterSize);
-    downSizeFilter.filter(surfPointsLessFlatScanDS);
+    pcl::PointCloud<PointXYZRGBI> surfPointsLessFlatScanDS;
+    surfPointsLessFlatScanDS = *surfPointsLessFlatScan;
+    // pcl::VoxelGrid<PointXYZRGBI> downSizeFilter;
+    // downSizeFilter.setInputCloud(surfPointsLessFlatScan);
+    // downSizeFilter.setLeafSize(_config.lessFlatFilterSize, _config.lessFlatFilterSize, _config.lessFlatFilterSize);
+    // downSizeFilter.filter(surfPointsLessFlatScanDS);
 
     _surfacePointsLessFlat += surfPointsLessFlatScanDS;
   }
@@ -326,9 +327,23 @@ void BasicScanRegistration::setScanBuffersFor(const size_t& startIdx, const size
 
   // mark unreliable points as picked
   for (size_t i = startIdx + _config.curvatureRegion; i < endIdx - _config.curvatureRegion; i++) {
-    const pcl::PointXYZI& previousPoint = (_laserCloud[i - 1]);
-    const pcl::PointXYZI& point = (_laserCloud[i]);
-    const pcl::PointXYZI& nextPoint = (_laserCloud[i + 1]);
+    // const pcl::PointXYZI& previousPoint = (_laserCloud[i - 1]);
+    // const pcl::PointXYZI& point = (_laserCloud[i]);
+    // const pcl::PointXYZI& nextPoint = (_laserCloud[i + 1]);
+
+    pcl::PointXYZI previousPoint, point, nextPoint;
+    previousPoint.x = (_laserCloud[i - 1]).x;
+    previousPoint.y = (_laserCloud[i - 1]).y;
+    previousPoint.z = (_laserCloud[i - 1]).z;
+    previousPoint.intensity = (_laserCloud[i - 1]).intensity;
+    point.x = (_laserCloud[i]).x;
+    point.y = (_laserCloud[i]).y;
+    point.z = (_laserCloud[i]).z;
+    point.intensity = (_laserCloud[i]).intensity;
+    nextPoint.x = (_laserCloud[i + 1]).x;
+    nextPoint.y = (_laserCloud[i + 1]).y;
+    nextPoint.z = (_laserCloud[i + 1]).z;
+    nextPoint.intensity = (_laserCloud[i + 1]).intensity;
 
     float diffNext = calcSquaredDiff(nextPoint, point);
 

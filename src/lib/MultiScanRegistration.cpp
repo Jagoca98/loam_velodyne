@@ -159,7 +159,7 @@ void MultiScanRegistration::handleCloudMessage(const sensor_msgs::PointCloud2Con
 
 
 
-void MultiScanRegistration::process(const pcl::PointCloud<pcl::PointXYZ>& laserCloudIn, const Time& scanTime)
+void MultiScanRegistration::process(const pcl::PointCloud<pcl::PointXYZRGB>& laserCloudIn, const Time& scanTime)
 {
   size_t cloudSize = laserCloudIn.size();
 
@@ -174,7 +174,7 @@ void MultiScanRegistration::process(const pcl::PointCloud<pcl::PointXYZ>& laserC
   }
 
   bool halfPassed = false;
-  pcl::PointXYZI point;
+  PointXYZRGBI point;
   _laserCloudScans.resize(_scanMapper.getNumberOfScanRings());
   // clear all scanline points
   std::for_each(_laserCloudScans.begin(), _laserCloudScans.end(), [](auto&&v) {v.clear(); }); 
@@ -229,6 +229,9 @@ void MultiScanRegistration::process(const pcl::PointCloud<pcl::PointXYZ>& laserC
     // calculate relative scan time based on point orientation
     float relTime = config().scanPeriod * (ori - startOri) / (endOri - startOri);
     point.intensity = scanID + relTime;
+    point.r = laserCloudIn[i].r;
+    point.g = laserCloudIn[i].g;
+    point.b = laserCloudIn[i].b;
 
     projectPointToStartOfSweep(point, relTime);
 

@@ -130,12 +130,12 @@ private:
    * @param laserCloudIn the new input cloud to process
    * @param scanTime the scan (message) timestamp
    */
-  void process(const pcl::PointCloud<pcl::PointXYZ>& laserCloudIn, const Time& scanTime);
+  void process(const pcl::PointCloud<pcl::PointXYZRGB>& laserCloudIn, const Time& scanTime);
 
 private:
   int _systemDelay = 20;             ///< system startup delay counter
   MultiScanMapper _scanMapper;  ///< mapper for mapping vertical point angles to scan ring IDs
-  std::vector<pcl::PointCloud<pcl::PointXYZI> > _laserCloudScans;
+  std::vector<pcl::PointCloud<PointXYZRGBI> > _laserCloudScans;
   ros::Subscriber _subLaserCloud;   ///< input cloud message subscriber
 
 };

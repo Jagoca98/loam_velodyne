@@ -10,6 +10,27 @@
 #include "CircularBuffer.h"
 #include "time_utils.h"
 
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/filters/voxel_grid.h>
+
+// Define the custom point type
+struct PointXYZRGBI {
+    PCL_ADD_POINT4D; // This adds the members x,y,z which are the PointXYZ definition
+    PCL_ADD_RGB;     // This adds the member rgb
+    // float intensity;
+    PCL_ADD_INTENSITY;
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+} EIGEN_ALIGN16;
+
+// Macro to register the custom point type with PCL
+POINT_CLOUD_REGISTER_POINT_STRUCT(PointXYZRGBI,
+                                  (float, x, x)
+                                  (float, y, y)
+                                  (float, z, z)
+                                  (std::uint32_t, rgb, rgb)
+                                  (float, intensity, intensity))
+
 namespace loam
 {
 
@@ -139,7 +160,7 @@ namespace loam
     *
     * @param relTime the time relative to the scan time
     */
-    void processScanlines(const Time& scanTime, std::vector<pcl::PointCloud<pcl::PointXYZI>> const& laserCloudScans);
+    void processScanlines(const Time& scanTime, std::vector<pcl::PointCloud<PointXYZRGBI>> const& laserCloudScans);
 
     bool configure(const RegistrationParams& config = RegistrationParams()); 
 
@@ -151,7 +172,7 @@ namespace loam
     * @param point The point to modify
     * @param relTime The time to project by
     */
-    void projectPointToStartOfSweep(pcl::PointXYZI& point, float relTime);
+    void projectPointToStartOfSweep(PointXYZRGBI& point, float relTime);
 
     auto const& imuTransform          () { return _imuTrans             ; }
     auto const& sweepStart            () { return _sweepStart           ; }
@@ -177,7 +198,7 @@ namespace loam
      *
      * @param point the point to project
      */
-    void transformToStartIMU(pcl::PointXYZI& point);
+    void transformToStartIMU(PointXYZRGBI& point);
 
     /** \brief Prepare for next scan / sweep.
      *
@@ -231,13 +252,13 @@ namespace loam
   private:
     RegistrationParams _config;  ///< registration parameter
 
-    pcl::PointCloud<pcl::PointXYZI> _laserCloud;   ///< full resolution input cloud
+    pcl::PointCloud<PointXYZRGBI> _laserCloud;   ///< full resolution input cloud
     std::vector<IndexRange> _scanIndices;          ///< start and end indices of the individual scans withing the full resolution cloud
 
-    pcl::PointCloud<pcl::PointXYZI> _cornerPointsSharp;      ///< sharp corner points cloud
-    pcl::PointCloud<pcl::PointXYZI> _cornerPointsLessSharp;  ///< less sharp corner points cloud
-    pcl::PointCloud<pcl::PointXYZI> _surfacePointsFlat;      ///< flat surface points cloud
-    pcl::PointCloud<pcl::PointXYZI> _surfacePointsLessFlat;  ///< less flat surface points cloud
+    pcl::PointCloud<PointXYZRGBI> _cornerPointsSharp;      ///< sharp corner points cloud
+    pcl::PointCloud<PointXYZRGBI> _cornerPointsLessSharp;  ///< less sharp corner points cloud
+    pcl::PointCloud<PointXYZRGBI> _surfacePointsFlat;      ///< flat surface points cloud
+    pcl::PointCloud<PointXYZRGBI> _surfacePointsLessFlat;  ///< less flat surface points cloud
 
     Time _sweepStart;            ///< time stamp of beginning of current sweep
     Time _scanTime;              ///< time stamp of most recent scan
