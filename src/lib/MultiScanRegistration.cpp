@@ -186,9 +186,9 @@ void MultiScanRegistration::process(const pcl::PointCloud<pcl::PointXYZRGB>& las
     point.z = laserCloudIn[i].x;
 
     // skip NaN and INF valued points
-    if (!pcl_isfinite(point.x) ||
-        !pcl_isfinite(point.y) ||
-        !pcl_isfinite(point.z)) {
+    if (!std::isfinite(point.x) ||
+        !std::isfinite(point.y) ||
+        !std::isfinite(point.z)) {
       continue;
     }
 

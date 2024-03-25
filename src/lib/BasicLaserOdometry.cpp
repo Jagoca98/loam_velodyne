@@ -24,20 +24,20 @@ BasicLaserOdometry::BasicLaserOdometry(float scanPeriod, size_t maxIterations) :
    _maxIterations(maxIterations),
    _deltaTAbort(0.1),
    _deltaRAbort(0.1),
-   _cornerPointsSharp(new pcl::PointCloud<pcl::PointXYZI>()),
-   _cornerPointsLessSharp(new pcl::PointCloud<pcl::PointXYZI>()),
-   _surfPointsFlat(new pcl::PointCloud<pcl::PointXYZI>()),
-   _surfPointsLessFlat(new pcl::PointCloud<pcl::PointXYZI>()),
-   _laserCloud(new pcl::PointCloud<pcl::PointXYZI>()),
-   _lastCornerCloud(new pcl::PointCloud<pcl::PointXYZI>()),
-   _lastSurfaceCloud(new pcl::PointCloud<pcl::PointXYZI>()),
-   _laserCloudOri(new pcl::PointCloud<pcl::PointXYZI>()),
-   _coeffSel(new pcl::PointCloud<pcl::PointXYZI>())
+   _cornerPointsSharp(new pcl::PointCloud<PointXYZRGBI>()),
+   _cornerPointsLessSharp(new pcl::PointCloud<PointXYZRGBI>()),
+   _surfPointsFlat(new pcl::PointCloud<PointXYZRGBI>()),
+   _surfPointsLessFlat(new pcl::PointCloud<PointXYZRGBI>()),
+   _laserCloud(new pcl::PointCloud<PointXYZRGBI>()),
+   _lastCornerCloud(new pcl::PointCloud<PointXYZRGBI>()),
+   _lastSurfaceCloud(new pcl::PointCloud<PointXYZRGBI>()),
+   _laserCloudOri(new pcl::PointCloud<PointXYZRGBI>()),
+   _coeffSel(new pcl::PointCloud<PointXYZRGBI>())
 {}
 
 
 
-void BasicLaserOdometry::transformToStart(const pcl::PointXYZI& pi, pcl::PointXYZI& po)
+void BasicLaserOdometry::transformToStart(const PointXYZRGBI& pi, PointXYZRGBI& po)
 {
    float s = (1.f / _scanPeriod) * (pi.intensity - int(pi.intensity));
 
@@ -54,13 +54,13 @@ void BasicLaserOdometry::transformToStart(const pcl::PointXYZI& pi, pcl::PointXY
 
 
 
-size_t BasicLaserOdometry::transformToEnd(pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud)
+size_t BasicLaserOdometry::transformToEnd(pcl::PointCloud<PointXYZRGBI>::Ptr& cloud)
 {
    size_t cloudSize = cloud->points.size();
 
    for (size_t i = 0; i < cloudSize; i++)
    {
-      pcl::PointXYZI& point = cloud->points[i];
+      PointXYZRGBI& point = cloud->points[i];
 
       float s = (1.f / _scanPeriod) * (point.intensity - int(point.intensity));
 
@@ -210,7 +210,7 @@ void BasicLaserOdometry::process()
       return;
    }
 
-   pcl::PointXYZI coeff;
+   PointXYZRGBI coeff;
    bool isDegenerate = false;
    Eigen::Matrix<float, 6, 6> matP;
 
@@ -227,7 +227,7 @@ void BasicLaserOdometry::process()
       std::vector<float> pointSearchSqDis(1);
       std::vector<int> indices;
 
-      pcl::removeNaNFromPointCloud(*_cornerPointsSharp, *_cornerPointsSharp, indices);
+      // pcl::removeNaNFromPointCloud(*_cornerPointsSharp, *_cornerPointsSharp, indices);
       size_t cornerPointsSharpNum = _cornerPointsSharp->points.size();
       size_t surfPointsFlatNum = _surfPointsFlat->points.size();
 
@@ -239,7 +239,7 @@ void BasicLaserOdometry::process()
 
       for (size_t iterCount = 0; iterCount < _maxIterations; iterCount++)
       {
-         pcl::PointXYZI pointSel, pointProj, tripod1, tripod2, tripod3;
+         PointXYZRGBI pointSel, pointProj, tripod1, tripod2, tripod3;
          _laserCloudOri->clear();
          _coeffSel->clear();
 
@@ -249,7 +249,7 @@ void BasicLaserOdometry::process()
 
             if (iterCount % 5 == 0)
             {
-               pcl::removeNaNFromPointCloud(*_lastCornerCloud, *_lastCornerCloud, indices);
+               // pcl::removeNaNFromPointCloud(*_lastCornerCloud, *_lastCornerCloud, indices);
                _lastCornerKDTree.nearestKSearch(pointSel, 1, pointSearchInd, pointSearchSqDis);
 
                int closestPointInd = -1, minPointInd2 = -1;
@@ -496,7 +496,7 @@ void BasicLaserOdometry::process()
 
          for (int i = 0; i < pointSelNum; i++)
          {
-            const pcl::PointXYZI& pointOri = _laserCloudOri->points[i];
+            const PointXYZRGBI& pointOri = _laserCloudOri->points[i];
             coeff = _coeffSel->points[i];
 
             float s = 1;
@@ -603,13 +603,13 @@ void BasicLaserOdometry::process()
          _transform.pos.y() += matX(4, 0);
          _transform.pos.z() += matX(5, 0);
 
-         if (!pcl_isfinite(_transform.rot_x.rad())) _transform.rot_x = Angle();
-         if (!pcl_isfinite(_transform.rot_y.rad())) _transform.rot_y = Angle();
-         if (!pcl_isfinite(_transform.rot_z.rad())) _transform.rot_z = Angle();
+         if (!std::isfinite(_transform.rot_x.rad())) _transform.rot_x = Angle();
+         if (!std::isfinite(_transform.rot_y.rad())) _transform.rot_y = Angle();
+         if (!std::isfinite(_transform.rot_z.rad())) _transform.rot_z = Angle();
 
-         if (!pcl_isfinite(_transform.pos.x())) _transform.pos.x() = 0.0;
-         if (!pcl_isfinite(_transform.pos.y())) _transform.pos.y() = 0.0;
-         if (!pcl_isfinite(_transform.pos.z())) _transform.pos.z() = 0.0;
+         if (!std::isfinite(_transform.pos.x())) _transform.pos.x() = 0.0;
+         if (!std::isfinite(_transform.pos.y())) _transform.pos.y() = 0.0;
+         if (!std::isfinite(_transform.pos.z())) _transform.pos.z() = 0.0;
 
          float deltaR = sqrt(pow(rad2deg(matX(0, 0)), 2) +
                              pow(rad2deg(matX(1, 0)), 2) +

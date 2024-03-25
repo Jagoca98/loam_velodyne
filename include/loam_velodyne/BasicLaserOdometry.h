@@ -4,6 +4,8 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
+#include "PointXYZRGBI.h"
+
 namespace loam
 {
 
@@ -45,7 +47,7 @@ namespace loam
      *
      * @param cloud the point cloud to transform
      */
-    size_t transformToEnd(pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud);
+    size_t transformToEnd(pcl::PointCloud<PointXYZRGBI>::Ptr& cloud);
 
   private:
     /** \brief Transform the given point to the start of the sweep.
@@ -53,7 +55,7 @@ namespace loam
      * @param pi the point to transform
      * @param po the point instance for storing the result
      */
-    void transformToStart(const pcl::PointXYZI& pi, pcl::PointXYZI& po);
+    void transformToStart(const PointXYZRGBI& pi, PointXYZRGBI& po);
 
 
     void pluginIMURotation(const Angle& bcx, const Angle& bcy, const Angle& bcz,
@@ -74,20 +76,20 @@ namespace loam
     float _deltaTAbort;     ///< optimization abort threshold for deltaT
     float _deltaRAbort;     ///< optimization abort threshold for deltaR
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _lastCornerCloud;    ///< last corner points cloud
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _lastSurfaceCloud;   ///< last surface points cloud
+    pcl::PointCloud<PointXYZRGBI>::Ptr _lastCornerCloud;    ///< last corner points cloud
+    pcl::PointCloud<PointXYZRGBI>::Ptr _lastSurfaceCloud;   ///< last surface points cloud
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudOri;      ///< point selection
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _coeffSel;           ///< point selection coefficients
+    pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudOri;      ///< point selection
+    pcl::PointCloud<PointXYZRGBI>::Ptr _coeffSel;           ///< point selection coefficients
 
-    nanoflann::KdTreeFLANN<pcl::PointXYZI> _lastCornerKDTree;   ///< last corner cloud KD-tree
-    nanoflann::KdTreeFLANN<pcl::PointXYZI> _lastSurfaceKDTree;  ///< last surface cloud KD-tree
+    nanoflann::KdTreeFLANN<PointXYZRGBI> _lastCornerKDTree;   ///< last corner cloud KD-tree
+    nanoflann::KdTreeFLANN<PointXYZRGBI> _lastSurfaceKDTree;  ///< last surface cloud KD-tree
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _cornerPointsSharp;      ///< sharp corner points cloud
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _cornerPointsLessSharp;  ///< less sharp corner points cloud
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _surfPointsFlat;         ///< flat surface points cloud
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _surfPointsLessFlat;     ///< less flat surface points cloud
-    pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloud;             ///< full resolution cloud
+    pcl::PointCloud<PointXYZRGBI>::Ptr _cornerPointsSharp;      ///< sharp corner points cloud
+    pcl::PointCloud<PointXYZRGBI>::Ptr _cornerPointsLessSharp;  ///< less sharp corner points cloud
+    pcl::PointCloud<PointXYZRGBI>::Ptr _surfPointsFlat;         ///< flat surface points cloud
+    pcl::PointCloud<PointXYZRGBI>::Ptr _surfPointsLessFlat;     ///< less flat surface points cloud
+    pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloud;             ///< full resolution cloud
 
     std::vector<int> _pointSearchCornerInd1;    ///< first corner point search index buffer
     std::vector<int> _pointSearchCornerInd2;    ///< second corner point search index buffer

@@ -182,7 +182,7 @@ namespace loam
     cornerPointsSharp()->clear();
     pcl::fromROSMsg(*cornerPointsSharpMsg, *cornerPointsSharp());
     std::vector<int> indices;
-    pcl::removeNaNFromPointCloud(*cornerPointsSharp(), *cornerPointsSharp(), indices);
+    // pcl::removeNaNFromPointCloud(*cornerPointsSharp(), *cornerPointsSharp(), indices);
     _newCornerPointsSharp = true;
   }
 
@@ -195,7 +195,7 @@ namespace loam
     cornerPointsLessSharp()->clear();
     pcl::fromROSMsg(*cornerPointsLessSharpMsg, *cornerPointsLessSharp());
     std::vector<int> indices;
-    pcl::removeNaNFromPointCloud(*cornerPointsLessSharp(), *cornerPointsLessSharp(), indices);
+    // pcl::removeNaNFromPointCloud(*cornerPointsLessSharp(), *cornerPointsLessSharp(), indices);
     _newCornerPointsLessSharp = true;
   }
 
@@ -208,7 +208,7 @@ namespace loam
     surfPointsFlat()->clear();
     pcl::fromROSMsg(*surfPointsFlatMsg, *surfPointsFlat());
     std::vector<int> indices;
-    pcl::removeNaNFromPointCloud(*surfPointsFlat(), *surfPointsFlat(), indices);
+    // pcl::removeNaNFromPointCloud(*surfPointsFlat(), *surfPointsFlat(), indices);
     _newSurfPointsFlat = true;
   }
 
@@ -221,7 +221,7 @@ namespace loam
     surfPointsLessFlat()->clear();
     pcl::fromROSMsg(*surfPointsLessFlatMsg, *surfPointsLessFlat());
     std::vector<int> indices;
-    pcl::removeNaNFromPointCloud(*surfPointsLessFlat(), *surfPointsLessFlat(), indices);
+    // pcl::removeNaNFromPointCloud(*surfPointsLessFlat(), *surfPointsLessFlat(), indices);
     _newSurfPointsLessFlat = true;
   }
 
@@ -234,7 +234,7 @@ namespace loam
     laserCloud()->clear();
     pcl::fromROSMsg(*laserCloudFullResMsg, *laserCloud());
     std::vector<int> indices;
-    pcl::removeNaNFromPointCloud(*laserCloud(), *laserCloud(), indices);
+    // pcl::removeNaNFromPointCloud(*laserCloud(), *laserCloud(), indices);
     _newLaserCloudFullRes = true;
   }
 
