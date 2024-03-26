@@ -4,6 +4,8 @@
 
 #include <pcl/point_types.h>
 
+#include "PointXYZRGBI.h"
+
 
 namespace loam {
 
@@ -25,6 +27,9 @@ public:
   Vector3(const pcl::PointXYZI &p)
       : Eigen::Vector4f(p.x, p.y, p.z, 0) {}
 
+  Vector3(const PointXYZRGBI &p)
+      : Eigen::Vector4f(p.x, p.y, p.z, 0) {}
+
   template<typename OtherDerived>
   Vector3 &operator=(const Eigen::MatrixBase <OtherDerived> &rhs) {
     this->Eigen::Vector4f::operator=(rhs);
@@ -39,6 +44,13 @@ public:
   }
 
   Vector3 &operator=(const pcl::PointXYZI &rhs) {
+    x() = rhs.x;
+    y() = rhs.y;
+    z() = rhs.z;
+    return *this;
+  }
+
+  Vector3 &operator=(const PointXYZRGBI &rhs) {
     x() = rhs.x;
     y() = rhs.y;
     z() = rhs.z;
@@ -63,6 +75,16 @@ public:
     dst.x = x();
     dst.y = y();
     dst.z = z();
+    dst.intensity = 0;
+    return dst;
+  }
+
+  operator PointXYZRGBI() {
+    PointXYZRGBI dst;
+    dst.x = x();
+    dst.y = y();
+    dst.z = z();
+    dst.rgb = 0;
     dst.intensity = 0;
     return dst;
   }

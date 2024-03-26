@@ -40,6 +40,8 @@
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 
+#include "PointXYZRGBI.h"
+
 namespace loam
 {
 
@@ -116,8 +118,8 @@ private:
 
    void transformAssociateToMap();
    void transformUpdate();
-   void pointAssociateToMap(const pcl::PointXYZI& pi, pcl::PointXYZI& po);
-   void pointAssociateTobeMapped(const pcl::PointXYZI& pi, pcl::PointXYZI& po);
+   void pointAssociateToMap(const PointXYZRGBI& pi, PointXYZRGBI& po);
+   void pointAssociateTobeMapped(const PointXYZRGBI& pi, PointXYZRGBI& po);
    void transformFullResToMap();
 
    bool createDownsizedMap();
@@ -147,27 +149,27 @@ private:
    const size_t _laserCloudDepth;
    const size_t _laserCloudNum;
 
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudCornerLast;   ///< last corner points cloud
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudSurfLast;     ///< last surface points cloud
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudFullRes;      ///< last full resolution cloud
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudCornerLast;   ///< last corner points cloud
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurfLast;     ///< last surface points cloud
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudFullRes;      ///< last full resolution cloud
 
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudCornerStack;
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudSurfStack;
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudCornerStackDS;  ///< down sampled
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudSurfStackDS;    ///< down sampled
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudCornerStack;
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurfStack;
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudCornerStackDS;  ///< down sampled
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurfStackDS;    ///< down sampled
 
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudSurround;
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudSurroundDS;     ///< down sampled
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudCornerFromMap;
-   pcl::PointCloud<pcl::PointXYZI>::Ptr _laserCloudSurfFromMap;
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurround;
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurroundDS;     ///< down sampled
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudCornerFromMap;
+   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurfFromMap;
 
-   pcl::PointCloud<pcl::PointXYZI> _laserCloudOri;
-   pcl::PointCloud<pcl::PointXYZI> _coeffSel;
+   pcl::PointCloud<PointXYZRGBI> _laserCloudOri;
+   pcl::PointCloud<PointXYZRGBI> _coeffSel;
 
-   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> _laserCloudCornerArray;
-   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> _laserCloudSurfArray;
-   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> _laserCloudCornerDSArray;  ///< down sampled
-   std::vector<pcl::PointCloud<pcl::PointXYZI>::Ptr> _laserCloudSurfDSArray;    ///< down sampled
+   std::vector<pcl::PointCloud<PointXYZRGBI>::Ptr> _laserCloudCornerArray;
+   std::vector<pcl::PointCloud<PointXYZRGBI>::Ptr> _laserCloudSurfArray;
+   std::vector<pcl::PointCloud<PointXYZRGBI>::Ptr> _laserCloudCornerDSArray;  ///< down sampled
+   std::vector<pcl::PointCloud<PointXYZRGBI>::Ptr> _laserCloudSurfDSArray;    ///< down sampled
 
    std::vector<size_t> _laserCloudValidInd;
    std::vector<size_t> _laserCloudSurroundInd;
