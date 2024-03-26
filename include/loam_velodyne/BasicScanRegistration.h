@@ -10,7 +10,7 @@
 #include "CircularBuffer.h"
 #include "time_utils.h"
 
-#include "PointXYZRGBI.h"
+#include "utils_pcl.hpp"
 
 namespace loam
 {

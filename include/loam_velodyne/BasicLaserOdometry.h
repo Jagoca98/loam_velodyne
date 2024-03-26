@@ -4,7 +4,7 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 
-#include "PointXYZRGBI.h"
+#include "utils_pcl.hpp"
 
 namespace loam
 {

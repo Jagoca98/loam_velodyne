@@ -72,7 +72,7 @@ BasicLaserMapping::BasicLaserMapping(const float& scanPeriod, const size_t& maxI
    _laserCloudCornerStackDS(new pcl::PointCloud<PointXYZRGBI>()),
    _laserCloudSurfStackDS(new pcl::PointCloud<PointXYZRGBI>()),
    _laserCloudSurround(new pcl::PointCloud<PointXYZRGBI>()),
-   _laserCloudSurroundDS(new pcl::PointCloud<PointXYZRGBI>()),
+   _laserCloudSurroundDS(new pcl::PointCloud<pcl::PointXYZRGBL>()),
    _laserCloudCornerFromMap(new pcl::PointCloud<PointXYZRGBI>()),
    _laserCloudSurfFromMap(new pcl::PointCloud<PointXYZRGBI>())
 {
@@ -281,9 +281,9 @@ bool BasicLaserMapping::createDownsizedMap()
 
    // down size map cloud
    _laserCloudSurroundDS->clear();
-   *_laserCloudSurroundDS = *_laserCloudSurround; // WIP
-   // _downSizeFilterCorner.setInputCloud(_laserCloudSurround);
-   // _downSizeFilterCorner.filter(*_laserCloudSurroundDS);
+   *_laserCloudSurroundDS = *utils::convertToPointXYZRGBL(_laserCloudSurround); // WIP
+   _downSizeFilterCorner.setInputCloud(_laserCloudSurroundDS);
+   _downSizeFilterCorner.filter(*_laserCloudSurroundDS);
    return true;
 }
 

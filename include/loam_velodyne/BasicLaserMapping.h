@@ -40,7 +40,7 @@
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 
-#include "PointXYZRGBI.h"
+#include "utils_pcl.hpp"
 
 namespace loam
 {
@@ -159,7 +159,7 @@ private:
    pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurfStackDS;    ///< down sampled
 
    pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurround;
-   pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurroundDS;     ///< down sampled
+   pcl::PointCloud<pcl::PointXYZRGBL>::Ptr _laserCloudSurroundDS;     ///< down sampled
    pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudCornerFromMap;
    pcl::PointCloud<PointXYZRGBI>::Ptr _laserCloudSurfFromMap;
 
@@ -178,9 +178,9 @@ private:
 
    CircularBuffer<IMUState2> _imuHistory;    ///< history of IMU states
 
-   pcl::VoxelGrid<pcl::PointXYZI> _downSizeFilterCorner;   ///< voxel filter for down sizing corner clouds
-   pcl::VoxelGrid<pcl::PointXYZI> _downSizeFilterSurf;     ///< voxel filter for down sizing surface clouds
-   pcl::VoxelGrid<pcl::PointXYZI> _downSizeFilterMap;      ///< voxel filter for down sizing accumulated map
+   pcl::VoxelGrid<pcl::PointXYZRGBL> _downSizeFilterCorner;   ///< voxel filter for down sizing corner clouds
+   pcl::VoxelGrid<pcl::PointXYZRGBL> _downSizeFilterSurf;     ///< voxel filter for down sizing surface clouds
+   pcl::VoxelGrid<pcl::PointXYZRGBL> _downSizeFilterMap;      ///< voxel filter for down sizing accumulated map
 
    bool _downsizedMapCreated = false;
 };
