@@ -264,12 +264,12 @@ bool BasicLaserMapping::createDownsizedMap()
       pcl::PointCloud<PointXYZRGBI>::Ptr surfPointsAux(new pcl::PointCloud<PointXYZRGBI>());
 
       for (auto const& pt : cornerPoints->points){
-         if (pt.r + pt.g + pt.b > 1)
+         // if (pt.r + pt.g + pt.b > 1)
             cornerPointsAux->push_back(pt);
       }
 
       for (auto const& pt : surfPoints->points){
-         if (pt.r + pt.g + pt.b > 1)
+         // if (pt.r + pt.g + pt.b > 1)
             surfPointsAux->push_back(pt);
       }
 
@@ -282,8 +282,8 @@ bool BasicLaserMapping::createDownsizedMap()
    // down size map cloud
    _laserCloudSurroundDS->clear();
    *_laserCloudSurroundDS = *utils::convertToPointXYZRGBL(_laserCloudSurround); // WIP
-   _downSizeFilterCorner.setInputCloud(_laserCloudSurroundDS);
-   _downSizeFilterCorner.filter(*_laserCloudSurroundDS);
+   // _downSizeFilterCorner.setInputCloud(_laserCloudSurroundDS);
+   // _downSizeFilterCorner.filter(*_laserCloudSurroundDS);
    return true;
 }
 
@@ -321,7 +321,7 @@ bool BasicLaserMapping::process(Time const& laserOdometryTime)
    pointOnYAxis.z = 0.0;
    pointAssociateToMap(pointOnYAxis, pointOnYAxis);
 
-   auto const CUBE_SIZE = 50.0;
+   auto const CUBE_SIZE = 1000.0;
    auto const CUBE_HALF = CUBE_SIZE / 2;
 
    int centerCubeI = int((_transformTobeMapped.pos.x() + CUBE_HALF) / CUBE_SIZE) + _laserCloudCenWidth;
